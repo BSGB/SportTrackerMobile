@@ -3,6 +3,9 @@
     package="com.puntl.sporttracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-feature android:name="android.hardware.sensor.stepcounter"/>
+    <uses-feature android:name="android.hardware.sensor.stepdetector"/>
 
     <application
         android:name=".StarterApplication"
@@ -20,6 +23,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity"></activity>
+
+        <receiver android:name=".ResetStepsBroadcastReceiver"/>
+
+        <receiver android:name=".BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

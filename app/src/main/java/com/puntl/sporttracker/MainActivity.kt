@@ -38,26 +38,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         //virtual keyboard enter listener
-        passwordEditText.setOnKeyListener {
-            view, keyCode, keyEvent ->
-            if(keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) onSignClick(view)
+        passwordEditText.setOnKeyListener { view, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) onSignClick(view)
             false
         }
     }
 
     fun onSignClick(view: View) {
         Log.i("Sign", "Sign button clicked")
-        if(isInputCorrect()) {
+        if (isInputCorrect()) {
             Log.i("Sign", "User input is correct")
-            when(signStatus) {
+            when (signStatus) {
                 SignStatus.SIGN_IN.status -> {
                     Log.i("Sign", "Starting sign in process")
                     val username = usernameEditText.text.toString()
                     val password = passwordEditText.text.toString()
 
-                    ParseUser.logInInBackground(username, password) {
-                        user, exception ->
-                        if(user != null) {
+                    ParseUser.logInInBackground(username, password) { user, exception ->
+                        if (user != null) {
                             Log.i("Sign", "User signed in successfully, switching intent")
                             val homeIntent = Intent(applicationContext, HomeActivity::class.java)
                             startActivity(homeIntent)
@@ -78,9 +76,8 @@ class MainActivity : AppCompatActivity() {
                     parseUser.email = email
                     parseUser.setPassword(password)
 
-                    parseUser.signUpInBackground {
-                        exception ->
-                        if(exception == null) {
+                    parseUser.signUpInBackground { exception ->
+                        if (exception == null) {
                             Log.i("Sign", "User signed up successfully")
                             Toast.makeText(this, "Account created successfully.", Toast.LENGTH_SHORT).show()
                             signStatus = !signStatus
@@ -102,13 +99,14 @@ class MainActivity : AppCompatActivity() {
         return when (signStatus) {
             SignStatus.SIGN_IN.status -> {
                 usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
+                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
             }
             SignStatus.SIGN_UP.status -> {
                 usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
-                && emailEditText.text.isNotEmpty() && emailEditText.text.isNotBlank()
-            } else -> false
+                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
+                        && emailEditText.text.isNotEmpty() && emailEditText.text.isNotBlank()
+            }
+            else -> false
         }
     }
 
