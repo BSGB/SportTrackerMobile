@@ -25,6 +25,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ParseAnalytics.trackAppOpenedInBackground(intent)
 
+        //check if user is already signed in - if so, proceed to Home activity
+        if(ParseUser.getCurrentUser() != null) {
+            val homeIntent = Intent(applicationContext, HomeActivity::class.java)
+            startActivity(homeIntent)
+        }
+
         //hide action bar
         supportActionBar?.hide()
 

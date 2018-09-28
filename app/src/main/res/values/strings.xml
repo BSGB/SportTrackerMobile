@@ -12,5 +12,7 @@
     <!--home activity-->
     <string name="welcome">Hello, %1$s!</string>
     <string name="steps">Steps</string>
+    <!--home activity menu-->
+    <string name="sign_out">Sign Out</string>
 
 </resources>
