@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
-    private lateinit var sharedPreferences: SharedPreferences
     private var sensorManager: SensorManager? = null
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -48,14 +48,8 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sharedPreferences = applicationContext.getSharedPreferences("com.puntl.sporttracker", Context.MODE_PRIVATE)
 
-        //check if app runs for the first time
-        val isAlarmSet = sharedPreferences.getBoolean("steps_alarm", false)
-
-        //if so, register alarm for daily steps reset && change 'flag'
-        if (!isAlarmSet) {
-            ResetStepsCompanion.setResetStepsAlarm(this)
-            sharedPreferences.edit().putBoolean("steps_alarm", true).apply()
-        }
+        //set alarm if not set
+        if(!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
     }
 
     //on resume sensors config
@@ -87,9 +81,9 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
 
         /*checks if daily steps are negative and prevents from displaying it to the user,
         this kind of situation can occur when user reboots its phone and OS
-        hasn't run steps reset method yet - if so, message about loading is displayed*/
+        hasn't run steps reset method yet - if so, "0" is being displayed*/
         stepsTextView.text = if (totalSteps - dailyZero < 0) {
-            "loading..."
+            "0"
         } else {
             (totalSteps - dailyZero).toString()
         }

@@ -10,11 +10,11 @@ class ResetStepsCompanion {
     companion object {
         private var alarmMgr: AlarmManager? = null
 
-        fun setResetStepsAlarm(context : Context) {
-            alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        fun setResetStepsAlarm(applicationContext: Context) {
+            alarmMgr = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            val alarmReceiverIntent = Intent(context.applicationContext, ResetStepsBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context.applicationContext, 0, alarmReceiverIntent, 0)
+            val alarmReceiverIntent = Intent(applicationContext, ResetStepsBroadcastReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, 0)
 
             val calendar: Calendar = Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
@@ -28,6 +28,12 @@ class ResetStepsCompanion {
                     AlarmManager.INTERVAL_DAY,
                     pendingIntent
             )
+        }
+
+        fun isAlarmSet(applicationContext: Context): Boolean {
+            return (PendingIntent.getBroadcast(applicationContext, 0,
+                    Intent(applicationContext, ResetStepsBroadcastReceiver::class.java),
+                    PendingIntent.FLAG_NO_CREATE) != null)
         }
     }
 }
