@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
+    private var previousTotalSteps = 0
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -34,6 +35,11 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
                 startActivity(mainIntent)
                 true
             }
+            R.id.settingsMenuItem -> {
+                val settingsIntent = Intent(applicationContext, AppSettingsActivity::class.java)
+                startActivity(settingsIntent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -42,14 +48,24 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        /*user clicks on daily steps goal notification - it is necessary to check if user is
+        signed in and if isn't -> send back to MainActivity*/
+        if(ParseUser.getCurrentUser() == null) {
+            val mainIntent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(mainIntent)
+        }
+
         //greeting action bar
         supportActionBar?.title = getString(R.string.welcome, ParseUser.getCurrentUser().username)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sharedPreferences = applicationContext.getSharedPreferences("com.puntl.sporttracker", Context.MODE_PRIVATE)
 
-        //set alarm if not set
+        previousTotalSteps = sharedPreferences.getInt("total_steps", 0)
+
+        //set alarms if not set
         if(!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
+        if(!DailyStepsGoalCompanion.isAlarmSet(applicationContext)) DailyStepsGoalCompanion.setDailyStepsGoalAlarm(applicationContext)
     }
 
     //on resume sensors config
@@ -77,16 +93,10 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         //executes once on first app run - sets total steps as daily zero
         if (dailyZero < 0) sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
 
-        dailyZero = sharedPreferences.getInt("daily_zero", -1)
+        dailyZero = sharedPreferences.getInt("daily_zero", 0)
 
-        /*checks if daily steps are negative and prevents from displaying it to the user,
-        this kind of situation can occur when user reboots its phone and OS
-        hasn't run steps reset method yet - if so, "0" is being displayed*/
-        stepsTextView.text = if (totalSteps - dailyZero < 0) {
-            "0"
-        } else {
-            (totalSteps - dailyZero).toString()
-        }
+        //show daily steps
+        stepsTextView.text = (totalSteps + previousTotalSteps - dailyZero).toString()
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, p1: Int) {

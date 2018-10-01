@@ -14,5 +14,8 @@
     <string name="steps">Steps</string>
     <!--home activity menu-->
     <string name="sign_out">Sign Out</string>
+    <string name="settings">Settings</string>
 
+    <!--setting activity-->
+    <string name="daily_steps_goal">Daily steps goal</string>
 </resources>

@@ -9,9 +9,10 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 
-class ResetStepsBroadcastReceiver : BroadcastReceiver(), SensorEventListener{
+class PowerOffBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var sensorManager : SensorManager
+
+    private lateinit var sensorManager: SensorManager
 
     override fun onReceive(context: Context?, intent: Intent?) {
         sharedPreferences = context!!.getSharedPreferences("com.puntl.sporttracker", Context.MODE_PRIVATE)
@@ -23,14 +24,9 @@ class ResetStepsBroadcastReceiver : BroadcastReceiver(), SensorEventListener{
     override fun onSensorChanged(p0: SensorEvent?) {
         val totalSteps = p0!!.values[0].toInt()
 
-        //set current total as new daily zero
-        sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
-
-        //set daily goal to false (unreached)
-        sharedPreferences.edit().putBoolean("daily_goal_reached", false).apply()
-
-        //clear total steps (saved in order to keep real counter after reboot)
-        sharedPreferences.edit().putInt("total_steps", 0).apply()
+        //save current total steps + previous reboot steps
+        val previousTotalSteps = sharedPreferences.getInt("total_steps", 0)
+        sharedPreferences.edit().putInt("total_steps", previousTotalSteps + totalSteps).apply()
 
         sensorManager?.unregisterListener(this)
     }

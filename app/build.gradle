@@ -33,4 +33,5 @@ dependencies {
 
     implementation 'com.parse.bolts:bolts-tasks:1.4.0'
     implementation 'com.parse:parse-android:1.17.3'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }
