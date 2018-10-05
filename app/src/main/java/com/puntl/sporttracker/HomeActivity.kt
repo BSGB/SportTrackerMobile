@@ -72,6 +72,11 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         //set alarms if not set
         if(!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
         if(!DailyStepsGoalCompanion.isAlarmSet(applicationContext)) DailyStepsGoalCompanion.setDailyStepsGoalAlarm(applicationContext)
+
+        bicycleLinearLayout.setOnClickListener {
+            val preBicycleTripIntent = Intent(applicationContext, PreBicycleTripActivity::class.java)
+            startActivity(preBicycleTripIntent)
+        }
     }
 
     //on resume sensors config

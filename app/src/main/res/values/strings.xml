@@ -13,10 +13,18 @@
     <string name="welcome">Hello, %1$s!</string>
     <string name="steps">Steps</string>
     <string name="calories">%1$s kcal</string>
+    <string name="bicycle_trip">Bicycle Trip</string>
     <!--home activity menu-->
     <string name="sign_out">Sign Out</string>
     <string name="settings">Settings</string>
 
     <!--setting activity-->
     <string name="daily_steps_goal">Daily steps goal</string>
+    <string name="title_activity_bicycle_trip">Map</string>
+
+    <!--pre bicycle trip activity-->
+    <string name="introduction_title">Introduction</string>
+    <string name="introduction">In order to start your trip, press start. We will
+    require you to enable internet connection as well as GPS module.</string>
+    <string name="start">Start Trip</string>
 </resources>

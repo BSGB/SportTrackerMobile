@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=B9:F0:59:DA:F1:E5:0C:0C:5B:19:AF:EE:FA:83:87:84:E1:64:0A:3A%3Bcom.puntl.sporttracker
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    B9:F0:59:DA:F1:E5:0C:0C:5B:19:AF:EE:FA:83:87:84:E1:64:0A:3A
+
+    SHA-1 certificate fingerprint:
+    B9:F0:59:DA:F1:E5:0C:0C:5B:19:AF:EE:FA:83:87:84:E1:64:0A:3A
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBELrNKJqNB2_bLPZLFg74NiU48UiEphw4</string>
+</resources>
