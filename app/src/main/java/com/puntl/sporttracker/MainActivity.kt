@@ -13,6 +13,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     enum class SignStatus(val status: Boolean) {
         SIGN_IN(true),
         SIGN_UP(false)
@@ -50,69 +54,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onSignClick(view: View) {
-        Log.i("Sign", "Sign button clicked")
-        if (isInputCorrect()) {
-            Log.i("Sign", "User input is correct")
-            when (signStatus) {
-                SignStatus.SIGN_IN.status -> {
-                    Log.i("Sign", "Starting sign in process")
-                    val username = usernameEditText.text.toString()
-                    val password = passwordEditText.text.toString()
-
-                    ParseUser.logInInBackground(username, password) { user, exception ->
-                        if (user != null) {
-                            Log.i("Sign", "User signed in successfully, switching intent")
-                            val homeIntent = Intent(applicationContext, HomeActivity::class.java)
-                            startActivity(homeIntent)
-                        } else {
-                            Log.e("Sign", "Error while signing in user")
-                            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                SignStatus.SIGN_UP.status -> {
-                    Log.i("Sign", "Starting sign up process")
-                    val email = emailEditText.text.toString()
-                    val username = usernameEditText.text.toString()
-                    val password = passwordEditText.text.toString()
-
-                    val parseUser = ParseUser()
-                    parseUser.username = username
-                    parseUser.email = email
-                    parseUser.setPassword(password)
-
-                    parseUser.signUpInBackground { exception ->
-                        if (exception == null) {
-                            Log.i("Sign", "User signed up successfully")
-                            Toast.makeText(this, "Account created successfully.", Toast.LENGTH_SHORT).show()
-                            signStatus = !signStatus
-                            switchSignMode()
-                        } else {
-                            Log.e("Sign", "Error while creating user")
-                            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-        } else {
-            Log.e("Login", "User input incorrect")
-            Toast.makeText(this, "All fields have to be filled.", Toast.LENGTH_SHORT).show()
-        }
+    //do not let user go back to f.ex HomeActivity without signing in
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 
-    private fun isInputCorrect(): Boolean {
-        return when (signStatus) {
-            SignStatus.SIGN_IN.status -> {
-                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
+    fun onSignClick(view: View) {
+        Log.d(TAG, "Sign button clicked")
+        if (isInputCorrect()) {
+            Log.d(TAG, "User input is correct")
+            when (signStatus) {
+                SignStatus.SIGN_IN.status -> signUserIn()
+                SignStatus.SIGN_UP.status -> signUserUp()
             }
-            SignStatus.SIGN_UP.status -> {
-                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
-                        && emailEditText.text.isNotEmpty() && emailEditText.text.isNotBlank()
-            }
-            else -> false
+        } else {
+            Log.e(TAG, "User input incorrect")
+            Toast.makeText(this, "All fields have to be filled.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -131,6 +89,62 @@ class MainActivity : AppCompatActivity() {
                 emailEditText.visibility = View.VISIBLE
                 signButton.text = getString(R.string.sign_up)
                 signTextView.text = getString(R.string.sign, getString(R.string.sign_in))
+            }
+        }
+    }
+
+    private fun isInputCorrect(): Boolean {
+        return when (signStatus) {
+            SignStatus.SIGN_IN.status -> {
+                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
+                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
+            }
+            SignStatus.SIGN_UP.status -> {
+                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
+                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
+                        && emailEditText.text.isNotEmpty() && emailEditText.text.isNotBlank()
+            }
+            else -> false
+        }
+    }
+
+    private fun signUserUp() {
+        Log.d(TAG, "Starting sign up process")
+        val email = emailEditText.text.toString()
+        val username = usernameEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        val parseUser = ParseUser()
+        parseUser.username = username
+        parseUser.email = email
+        parseUser.setPassword(password)
+
+        parseUser.signUpInBackground { exception ->
+            if (exception == null) {
+                Log.d(TAG, "User signed up successfully")
+                Toast.makeText(this, "Account created successfully.", Toast.LENGTH_SHORT).show()
+                signStatus = !signStatus
+                switchSignMode()
+            } else {
+                Log.e(TAG, "Error while creating user")
+                Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun signUserIn() {
+        Log.d(TAG, "Starting sign in process")
+        val username = usernameEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        ParseUser.logInInBackground(username, password) { user, exception ->
+            if (user != null) {
+                Log.d(TAG, "User signed in successfully, switching intent")
+                val homeIntent = Intent(applicationContext, HomeActivity::class.java)
+                startActivity(homeIntent)
+            } else {
+                Log.e(TAG, "Error while signing in user")
+                Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

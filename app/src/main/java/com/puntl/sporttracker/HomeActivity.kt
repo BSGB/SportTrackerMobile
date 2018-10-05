@@ -17,6 +17,12 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
+    companion object {
+        private const val TAG = "HomeActivity"
+        //calories per step for average person (72kg, average height)
+        private const val CALORIES_PER_STEP = 0.04F
+    }
+
     private var sensorManager: SensorManager? = null
     private var previousTotalSteps = 0
     private lateinit var sharedPreferences: SharedPreferences
@@ -86,17 +92,35 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         sensorManager?.unregisterListener(this)
     }
 
+    //do not let user go back to sign in/sign up screen without signing out
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+
     override fun onSensorChanged(event: SensorEvent?) {
         val totalSteps = event!!.values[0].toInt()
         var dailyZero = sharedPreferences.getInt("daily_zero", -1)
 
         //executes once on first app run - sets total steps as daily zero
-        if (dailyZero < 0) sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
+        dailyZero = if(dailyZero < 0) {
+            sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
+            totalSteps
+        } else {
+            dailyZero
+        }
 
-        dailyZero = sharedPreferences.getInt("daily_zero", 0)
+        //calculate daily steps
+        val calculatedSteps = totalSteps + previousTotalSteps - dailyZero
 
         //show daily steps
-        stepsTextView.text = (totalSteps + previousTotalSteps - dailyZero).toString()
+        stepsTextView.text = calculatedSteps.toString()
+
+        //calculate burned calories
+        val burnedCalories = calculatedSteps * CALORIES_PER_STEP
+
+        //show burned calories
+        caloriesTextView.text = getString(R.string.calories, "%.2f".format(burnedCalories))
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, p1: Int) {
