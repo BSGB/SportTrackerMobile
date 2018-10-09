@@ -17,20 +17,18 @@ class PreBicycleTripActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.introduction_title)
     }
 
-    fun onStartTripClick(view : View) {
-        if(!checkPermissions()) {
+    fun onStartTripClick(view: View) {
+        if (!checkPermissions()) {
             startLocationTrackerService()
         }
     }
 
-    private fun checkPermissions() : Boolean {
-        return if(Build.VERSION.SDK_INT >= 23 &&
+    private fun checkPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
             true
-        } else {
-            false
-        }
+        } else false
     }
 
     private fun startLocationTrackerService() {
@@ -42,10 +40,10 @@ class PreBicycleTripActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             0 -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         startLocationTrackerService()
                     } else {
                         checkPermissions()

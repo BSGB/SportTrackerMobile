@@ -19,7 +19,7 @@ class DailyStepsGoalCompanion {
             alarmMgr?.setInexactRepeating(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
-                    15*60*1000,
+                    60*60*1000,
                     pendingIntent
             )
         }

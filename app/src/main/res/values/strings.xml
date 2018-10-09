@@ -27,4 +27,7 @@
     <string name="introduction">In order to start your trip, press start. We will
     require you to enable internet connection as well as GPS module.</string>
     <string name="start">Start Trip</string>
+
+    <!--bicycle trip activity-->
+    <string name="trip_time">%1$s : %2$s : %3$s</string>
 </resources>
