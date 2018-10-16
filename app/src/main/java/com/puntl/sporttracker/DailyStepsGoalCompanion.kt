@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 
+const val MINUTES = 60L
+const val SECONDS = 60L
+const val MILLISECONDS = 1000L
 class DailyStepsGoalCompanion {
     companion object {
         private var alarmMgr : AlarmManager? = null
@@ -19,7 +22,7 @@ class DailyStepsGoalCompanion {
             alarmMgr?.setInexactRepeating(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
-                    60*60*1000,
+                    MINUTES* SECONDS* MILLISECONDS,
                     pendingIntent
             )
         }

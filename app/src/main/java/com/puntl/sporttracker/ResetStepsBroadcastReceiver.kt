@@ -8,31 +8,40 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.preference.PreferenceManager
 
 class ResetStepsBroadcastReceiver : BroadcastReceiver(), SensorEventListener{
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sensorManager : SensorManager
 
+    private lateinit var dailyZeroStepsKey : String
+    private lateinit var dailyTotalStepsKey : String
+    private lateinit var dailyGoalReachedKey : String
+
     override fun onReceive(context: Context?, intent: Intent?) {
-        sharedPreferences = context!!.getSharedPreferences("com.puntl.sporttracker", Context.MODE_PRIVATE)
-        sensorManager = context!!.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!)
+        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+
+        dailyZeroStepsKey = context.getString(R.string.daily_zero_steps_key)
+        dailyTotalStepsKey = context.getString(R.string.daily_total_steps_key)
+        dailyGoalReachedKey = context.getString(R.string.daily_goal_reached_key)
     }
 
     override fun onSensorChanged(p0: SensorEvent?) {
         val totalSteps = p0!!.values[0].toInt()
 
         //set current total as new daily zero
-        sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
+        sharedPreferences.edit().putInt(dailyZeroStepsKey, totalSteps).apply()
 
         //set daily goal to false (unreached)
-        sharedPreferences.edit().putBoolean("daily_goal_reached", false).apply()
+        sharedPreferences.edit().putBoolean(dailyGoalReachedKey, false).apply()
 
         //clear total steps (saved in order to keep real counter after reboot)
-        sharedPreferences.edit().putInt("total_steps", 0).apply()
+        sharedPreferences.edit().putInt(dailyTotalStepsKey, 0).apply()
 
-        sensorManager?.unregisterListener(this)
+        sensorManager.unregisterListener(this)
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {

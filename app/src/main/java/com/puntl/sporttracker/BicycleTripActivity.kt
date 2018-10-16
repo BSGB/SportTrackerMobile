@@ -56,11 +56,11 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 locations.clear()
-                intent!!.extras.getParcelableArray("locations").forEach { locations.add(it as Location) }
+                intent!!.extras.getParcelableArray(LocationTrackerService.INTENT_EXTRA_LOCATIONS).forEach { locations.add(it as Location) }
                 updateMap()
             }
         }
-        registerReceiver(broadcastReceiver, IntentFilter("location_update"))
+        registerReceiver(broadcastReceiver, IntentFilter(LocationTrackerService.INTENT_ACTION))
     }
 
     override fun onPause() {
@@ -76,9 +76,6 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.setOnMapLoadedCallback {
-            if (locations.isNotEmpty()) updateMap()
-        }
     }
 
     private fun startTimer() {
@@ -120,7 +117,7 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
         latLngList.forEach { builder.include(it) }
         val bounds = builder.build()
         val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, BOUNDS_OFFSET)
-        mMap.addMarker(MarkerOptions().position(latLngList[0]).title("Start"))
+        mMap.addMarker(MarkerOptions().position(latLngList[0]).title(getString(R.string.start_pin_title)))
         mMap.moveCamera(cameraUpdate)
     }
 }

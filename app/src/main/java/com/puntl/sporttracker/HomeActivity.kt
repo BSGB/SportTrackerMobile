@@ -8,6 +8,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -15,17 +16,15 @@ import android.widget.Toast
 import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_home.*
 
+const val CALORIES_PER_STEP = 0.04F
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
-    companion object {
-        private const val TAG = "HomeActivity"
-        //calories per step for average person (72kg, average height)
-        private const val CALORIES_PER_STEP = 0.04F
-    }
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var dailyTotalStepsKey : String
+    private lateinit var dailyZeroStepsKey : String
 
     private var sensorManager: SensorManager? = null
     private var previousTotalSteps = 0
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -42,7 +41,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
                 true
             }
             R.id.settingsMenuItem -> {
-                val settingsIntent = Intent(applicationContext, AppSettingsActivity::class.java)
+                val settingsIntent = Intent(applicationContext, SettingsActivity::class.java)
                 startActivity(settingsIntent)
                 true
             }
@@ -65,9 +64,12 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         supportActionBar?.title = getString(R.string.welcome, ParseUser.getCurrentUser().username)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sharedPreferences = applicationContext.getSharedPreferences("com.puntl.sporttracker", Context.MODE_PRIVATE)
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        previousTotalSteps = sharedPreferences.getInt("total_steps", 0)
+        dailyTotalStepsKey = getString(R.string.daily_total_steps_key)
+        dailyZeroStepsKey = getString(R.string.daily_zero_steps_key)
+
+        previousTotalSteps = sharedPreferences.getInt(dailyTotalStepsKey, 0)
 
         //set alarms if not set
         if(!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
@@ -85,7 +87,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
         if (stepSensor == null) {
-            Toast.makeText(this, "No step counter sensor found.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_step_sensor_message), Toast.LENGTH_SHORT).show()
         } else {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
@@ -105,11 +107,11 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         val totalSteps = event!!.values[0].toInt()
-        var dailyZero = sharedPreferences.getInt("daily_zero", -1)
+        var dailyZero = sharedPreferences.getInt(dailyZeroStepsKey, -1)
 
         //executes once on first app run - sets total steps as daily zero
         dailyZero = if(dailyZero < 0) {
-            sharedPreferences.edit().putInt("daily_zero", totalSteps).apply()
+            sharedPreferences.edit().putInt(dailyZeroStepsKey, totalSteps).apply()
             totalSteps
         } else {
             dailyZero

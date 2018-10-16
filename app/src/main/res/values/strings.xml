@@ -14,13 +14,15 @@
     <string name="steps">Steps</string>
     <string name="calories">%1$s kcal</string>
     <string name="bicycle_trip">Bicycle Trip</string>
+    <string name="no_step_sensor_message">No step counter sensor found.</string>
     <!--home activity menu-->
     <string name="sign_out">Sign Out</string>
     <string name="settings">Settings</string>
 
     <!--setting activity-->
+    <string name="steps_category">STEPS</string>
     <string name="daily_steps_goal">Daily steps goal</string>
-    <string name="title_activity_bicycle_trip">Map</string>
+    <string name="daily_steps_goal_default">1000</string>
 
     <!--pre bicycle trip activity-->
     <string name="introduction_title">Introduction</string>
@@ -30,4 +32,15 @@
 
     <!--bicycle trip activity-->
     <string name="trip_time">%1$s : %2$s : %3$s</string>
+    <string name="start_pin_title">Start</string>
+
+    <!--daily steps goal notification-->
+    <string name="content_title">Congratulations!</string>
+    <string name="content_message">You have reached your daily steps goal (%1$s steps).</string>
+
+    <!--shared preferences keys-->
+    <string name="daily_total_steps_key">daily_total_steps</string>
+    <string name="daily_zero_steps_key">daily_zero_steps</string>
+    <string name="daily_steps_goal_key">daily_steps_goal</string>
+    <string name="daily_goal_reached_key">daily_goal_reached</string>
 </resources>
