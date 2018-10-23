@@ -17,11 +17,16 @@ import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_home.*
 
 const val CALORIES_PER_STEP = 0.04F
+
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
+    enum class ActivityType {
+        BICYCLE
+    }
+
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var dailyTotalStepsKey : String
-    private lateinit var dailyZeroStepsKey : String
+    private lateinit var dailyTotalStepsKey: String
+    private lateinit var dailyZeroStepsKey: String
 
     private var sensorManager: SensorManager? = null
     private var previousTotalSteps = 0
@@ -33,7 +38,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.signOutMenuItem -> {
                 ParseUser.logOut()
                 val mainIntent = Intent(applicationContext, MainActivity::class.java)
@@ -72,8 +77,8 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         previousTotalSteps = sharedPreferences.getInt(dailyTotalStepsKey, 0)
 
         //set alarms if not set
-        if(!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
-        if(!DailyStepsGoalCompanion.isAlarmSet(applicationContext)) DailyStepsGoalCompanion.setDailyStepsGoalAlarm(applicationContext)
+        if (!ResetStepsCompanion.isAlarmSet(applicationContext)) ResetStepsCompanion.setResetStepsAlarm(applicationContext)
+        if (!DailyStepsGoalCompanion.isAlarmSet(applicationContext)) DailyStepsGoalCompanion.setDailyStepsGoalAlarm(applicationContext)
 
         bicycleLinearLayout.setOnClickListener {
             val preBicycleTripIntent = Intent(applicationContext, PreBicycleTripActivity::class.java)
@@ -110,7 +115,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         var dailyZero = sharedPreferences.getInt(dailyZeroStepsKey, -1)
 
         //executes once on first app run - sets total steps as daily zero
-        dailyZero = if(dailyZero < 0) {
+        dailyZero = if (dailyZero < 0) {
             sharedPreferences.edit().putInt(dailyZeroStepsKey, totalSteps).apply()
             totalSteps
         } else {

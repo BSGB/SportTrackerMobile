@@ -11,11 +11,11 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 
-const val MIN_TIME = 10000L
-const val MIN_DISTANCE = 0F
 class LocationTrackerService : Service() {
 
     companion object {
+        const val MIN_TIME = 10000L
+        const val MIN_DISTANCE = 0F
         const val INTENT_ACTION = "location_update"
         const val INTENT_EXTRA_LOCATIONS = "locations"
         val locations = ArrayList<Location>()

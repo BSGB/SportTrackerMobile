@@ -21,8 +21,27 @@
 
     <!--setting activity-->
     <string name="steps_category">STEPS</string>
+    <string name="general_category">GENERAL</string>
+    <string name="user_height">Your height</string>
+    <string name="user_weight">Your weight</string>
+    <string name="user_gender">Your gender</string>
+    <string name="user_birth_date">Your date of birth</string>
+
+    <string-array name="user_gender_list">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+    <string-array name="user_gender_pref_list">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+
     <string name="daily_steps_goal">Daily steps goal</string>
     <string name="daily_steps_goal_default">1000</string>
+    <string name="user_height_default">175</string>
+    <string name="user_weight_default">70</string>
+    <string name="user_gender_default">male</string>
+    <string name="user_birth_date_default">1980-01-01</string>
 
     <!--pre bicycle trip activity-->
     <string name="introduction_title">Introduction</string>
@@ -33,6 +52,10 @@
     <!--bicycle trip activity-->
     <string name="trip_time">%1$s : %2$s : %3$s</string>
     <string name="start_pin_title">Start</string>
+    <string name="trip_average_speed">%1$s km/h</string>
+    <string name="trip_distance">%1$s km</string>
+    <string name="trip_calories">%1$s kcal</string>
+    <string name="calculating">calculating...</string>
 
     <!--daily steps goal notification-->
     <string name="content_title">Congratulations!</string>
@@ -43,4 +66,8 @@
     <string name="daily_zero_steps_key">daily_zero_steps</string>
     <string name="daily_steps_goal_key">daily_steps_goal</string>
     <string name="daily_goal_reached_key">daily_goal_reached</string>
+    <string name="user_weight_key">user_weight</string>
+    <string name="user_height_key">user_height</string>
+    <string name="user_birth_date_key">user_birth_date</string>
+    <string name="user_gender_key">user_gender</string>
 </resources>
