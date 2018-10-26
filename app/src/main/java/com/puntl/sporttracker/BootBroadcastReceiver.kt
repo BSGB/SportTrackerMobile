@@ -3,7 +3,6 @@ package com.puntl.sporttracker
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 
 class BootBroadcastReceiver : BroadcastReceiver() {
 

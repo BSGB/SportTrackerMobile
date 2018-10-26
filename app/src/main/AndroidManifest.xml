@@ -60,7 +60,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PreBicycleTripActivity"
+            android:name=".PreTripActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
 

@@ -14,7 +14,7 @@ class PowerOffBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sensorManager: SensorManager
 
-    private lateinit var dailyTotalStepsKey : String
+    private lateinit var dailyTotalStepsKey: String
 
     override fun onReceive(context: Context?, intent: Intent?) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!.applicationContext)

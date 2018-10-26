@@ -11,11 +11,9 @@ import com.parse.ParseAnalytics
 import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+private const val TAG = "MainActivity"
 
-    companion object {
-        private const val TAG = "MainActivity"
-    }
+class MainActivity : AppCompatActivity() {
 
     enum class SignStatus(val status: Boolean) {
         SIGN_IN(true),
@@ -30,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         ParseAnalytics.trackAppOpenedInBackground(intent)
 
         //check if user is already signed in - if so, proceed to Home activity
-        if(ParseUser.getCurrentUser() != null) {
+        if (ParseUser.getCurrentUser() != null) {
             val homeIntent = Intent(applicationContext, HomeActivity::class.java)
             startActivity(homeIntent)
         }
@@ -61,17 +59,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSignClick(view: View) {
-        Log.d(TAG, "Sign button clicked")
-        if (isInputCorrect()) {
-            Log.d(TAG, "User input is correct")
-            when (signStatus) {
-                SignStatus.SIGN_IN.status -> signUserIn()
-                SignStatus.SIGN_UP.status -> signUserUp()
-            }
-        } else {
-            Log.e(TAG, "User input incorrect")
-            Toast.makeText(this, "All fields have to be filled.", Toast.LENGTH_SHORT).show()
-        }
+//        Log.d(TAG, "Sign button clicked")
+//        if (isInputCorrect()) {
+//            Log.d(TAG, "User input is correct")
+//            when (signStatus) {
+//                SignStatus.SIGN_IN.status -> signUserIn()
+//                SignStatus.SIGN_UP.status -> signUserUp()
+//            }
+//        } else {
+//            Log.e(TAG, "User input incorrect")
+//            Toast.makeText(this, "All fields have to be filled.", Toast.LENGTH_SHORT).show()
+//        }
+        startActivity(Intent(applicationContext, HomeActivity::class.java))
     }
 
     private fun switchSignMode() {

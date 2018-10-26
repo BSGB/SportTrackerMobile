@@ -14,16 +14,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
-import kotlinx.android.synthetic.main.activity_bicycle_trip.*
+import kotlinx.android.synthetic.main.activity_trip.*
 
-const val BOUNDS_OFFSET = 100
 const val SECONDS_IN_HOUR = 3600
 const val METERS_IN_KILOMETER = 1000
 const val SECONDS_IN_MINUTE = 60
 const val MINUTES_IN_HOUR = 60
 const val MILLIS_IN_SECOND = 1000
 const val HOURS_IN_DAY = 24
-const val HANDLER_DELAY = 1000L
+private const val BOUNDS_OFFSET = 100
+private const val HANDLER_DELAY = 1000L
 
 class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -37,6 +37,7 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var userGenderKey: String
     private lateinit var caloriesCalculator: CaloriesCalculator
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var activityType: HomeActivity.ActivityType
     private val locations = mutableListOf<Location>()
     private val latLngList = mutableListOf<LatLng>()
     private val averageSpeedList = mutableListOf<Float>()
@@ -45,13 +46,14 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bicycle_trip)
+        setContentView(R.layout.activity_trip)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
 
         supportActionBar?.hide()
+        activityType = intent.getSerializableExtra("activity_type") as HomeActivity.ActivityType
         tripAvgSpeedTextView.text = getString(R.string.calculating)
         tripDistanceTextView.text = getString(R.string.calculating)
         burnedCaloriesTextView.text = getString(R.string.calculating)
@@ -63,16 +65,15 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        val userWeight = sharedPreferences.getString(userWeightKey, "70")
-        val userHeight = sharedPreferences.getString(userHeightKey, "175")
-        val userGender = sharedPreferences.getString(userGenderKey, "male")
-        val userBirthDate = sharedPreferences.getString(userBirthDateKey, "1980-01-01")
+        val userHeight = sharedPreferences.getString(userHeightKey, USER_HEIGHT_DEFAULT)
+        val userWeight = sharedPreferences.getString(userWeightKey, USER_WEIGHT_DEFAULT)
+        val userGender = sharedPreferences.getString(userGenderKey, USER_GENDER_DEFAULT)
+        val userBirthDate = sharedPreferences.getString(userBirthDateKey, USER_BIRTH_DATE_DEFAULT)
 
 
-        val activityType = HomeActivity.ActivityType.BICYCLE
         val userAge = CaloriesCalculator.getUserAge(userBirthDate)
         val userBMI = CaloriesCalculator.getUserBMI(userWeight.toDouble(), userHeight.toDouble(), userAge, userGender)
-        caloriesCalculator = CaloriesCalculator(activityType, userBMI, LocationTrackerService.MIN_TIME / MILLIS_IN_SECOND)
+        caloriesCalculator = CaloriesCalculator(activityType, userBMI, LocationTrackerService.minTime / MILLIS_IN_SECOND)
 
         startTime = System.currentTimeMillis()
         startTimer()
@@ -172,7 +173,7 @@ class BicycleTripActivity : AppCompatActivity(), OnMapReadyCallback {
         averageSpeedList.clear()
         for (i in 0 until locations.size - 1) {
             val distance = locations[i].distanceTo(locations[i + 1])
-            val speed = distance / (LocationTrackerService.MIN_TIME / MILLIS_IN_SECOND)
+            val speed = distance / (LocationTrackerService.minTime / MILLIS_IN_SECOND)
             averageSpeedList.add(speed)
         }
 

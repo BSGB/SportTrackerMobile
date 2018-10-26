@@ -27,7 +27,7 @@ class DatePreference(context: Context, attrs: AttributeSet) : DialogPreference(c
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult) {
             val year = datePicker.year
-            val month = if (datePicker.month < 10-1) "0${datePicker.month + 1}" else "${datePicker.month + 1}"
+            val month = if (datePicker.month < 10 - 1) "0${datePicker.month + 1}" else "${datePicker.month + 1}"
             val day = if (datePicker.dayOfMonth < 10) "0${datePicker.dayOfMonth}" else "${datePicker.dayOfMonth}"
             persistString("$year-$month-$day")
         }

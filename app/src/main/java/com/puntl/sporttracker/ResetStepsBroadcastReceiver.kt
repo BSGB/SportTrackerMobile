@@ -10,13 +10,13 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.preference.PreferenceManager
 
-class ResetStepsBroadcastReceiver : BroadcastReceiver(), SensorEventListener{
+class ResetStepsBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var sensorManager : SensorManager
+    private lateinit var sensorManager: SensorManager
 
-    private lateinit var dailyZeroStepsKey : String
-    private lateinit var dailyTotalStepsKey : String
-    private lateinit var dailyGoalReachedKey : String
+    private lateinit var dailyZeroStepsKey: String
+    private lateinit var dailyTotalStepsKey: String
+    private lateinit var dailyGoalReachedKey: String
 
     override fun onReceive(context: Context?, intent: Intent?) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context!!)

@@ -14,6 +14,7 @@
     <string name="steps">Steps</string>
     <string name="calories">%1$s kcal</string>
     <string name="bicycle_trip">Bicycle Trip</string>
+    <string name="run_trip">Run Trip</string>
     <string name="no_step_sensor_message">No step counter sensor found.</string>
     <!--home activity menu-->
     <string name="sign_out">Sign Out</string>
@@ -22,10 +23,13 @@
     <!--setting activity-->
     <string name="steps_category">STEPS</string>
     <string name="general_category">GENERAL</string>
+    <string name="trip_category">TRIP</string>
     <string name="user_height">Your height</string>
     <string name="user_weight">Your weight</string>
     <string name="user_gender">Your gender</string>
     <string name="user_birth_date">Your date of birth</string>
+    <string name="bicycle_tracker_time">Bicycle tracker refresh interval</string>
+    <string name="run_tracker_time">Run tracker refresh interval</string>
 
     <string-array name="user_gender_list">
         <item>male</item>
@@ -61,6 +65,9 @@
     <string name="content_title">Congratulations!</string>
     <string name="content_message">You have reached your daily steps goal (%1$s steps).</string>
 
+    <!--seek bar preference-->
+    <string name="picked_tracker_time">%1$s seconds</string>
+
     <!--shared preferences keys-->
     <string name="daily_total_steps_key">daily_total_steps</string>
     <string name="daily_zero_steps_key">daily_zero_steps</string>
@@ -70,4 +77,6 @@
     <string name="user_height_key">user_height</string>
     <string name="user_birth_date_key">user_birth_date</string>
     <string name="user_gender_key">user_gender</string>
+    <string name="bicycle_tracker_time_key">bicycle_tracker_time</string>
+    <string name="run_tracker_time_key">run_tracker_time</string>
 </resources>

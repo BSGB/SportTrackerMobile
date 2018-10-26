@@ -16,12 +16,13 @@ import android.widget.Toast
 import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_home.*
 
-const val CALORIES_PER_STEP = 0.04F
+private const val CALORIES_PER_STEP = 0.04F
 
 class HomeActivity : AppCompatActivity(), SensorEventListener {
 
     enum class ActivityType {
-        BICYCLE
+        BICYCLE,
+        RUN
     }
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -60,13 +61,13 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
 
         /*user clicks on daily steps goal notification - it is necessary to check if user is
         signed in and if isn't -> send back to MainActivity*/
-        if(ParseUser.getCurrentUser() == null) {
-            val mainIntent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(mainIntent)
-        }
+//        if(ParseUser.getCurrentUser() == null) {
+//            val mainIntent = Intent(applicationContext, MainActivity::class.java)
+//            startActivity(mainIntent)
+//        }
 
         //greeting action bar
-        supportActionBar?.title = getString(R.string.welcome, ParseUser.getCurrentUser().username)
+//        supportActionBar?.title = getString(R.string.welcome, ParseUser.getCurrentUser().username)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -81,8 +82,15 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         if (!DailyStepsGoalCompanion.isAlarmSet(applicationContext)) DailyStepsGoalCompanion.setDailyStepsGoalAlarm(applicationContext)
 
         bicycleLinearLayout.setOnClickListener {
-            val preBicycleTripIntent = Intent(applicationContext, PreBicycleTripActivity::class.java)
-            startActivity(preBicycleTripIntent)
+            val preTripIntent = Intent(applicationContext, PreTripActivity::class.java)
+            preTripIntent.putExtra("activity_type", ActivityType.BICYCLE)
+            startActivity(preTripIntent)
+        }
+
+        runLinearLayout.setOnClickListener {
+            val preTripIntent = Intent(applicationContext, PreTripActivity::class.java)
+            preTripIntent.putExtra("activity_type", ActivityType.RUN)
+            startActivity(preTripIntent)
         }
     }
 

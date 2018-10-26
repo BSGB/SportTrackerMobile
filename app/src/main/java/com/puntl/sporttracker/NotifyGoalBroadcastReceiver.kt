@@ -16,19 +16,20 @@ import android.media.RingtoneManager
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 
-const val NOTIFICATION_CHANNEL_ID = "default"
-const val NOTIFICATION_CHANNEL_NAME = "DEFAULT_CHANNEL"
-const val NOTIFICATION_CHANNEL_DESC = "SPORT_TRACKER_NOTIFICATIONS"
+private const val NOTIFICATION_CHANNEL_ID = "default"
+private const val NOTIFICATION_CHANNEL_NAME = "DEFAULT_CHANNEL"
+private const val NOTIFICATION_CHANNEL_DESC = "SPORT_TRACKER_NOTIFICATIONS"
+
 class NotifyGoalBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sensorManager: SensorManager
-    private lateinit var applicationContext : Context
+    private lateinit var applicationContext: Context
 
-    private lateinit var dailyTotalStepsKey : String
-    private lateinit var dailyZeroStepsKey : String
-    private lateinit var dailyStepsGoalKey : String
-    private lateinit var dailyGoalReachedKey : String
+    private lateinit var dailyTotalStepsKey: String
+    private lateinit var dailyZeroStepsKey: String
+    private lateinit var dailyStepsGoalKey: String
+    private lateinit var dailyGoalReachedKey: String
 
     private var previousTotalSteps = 0
 
@@ -51,9 +52,9 @@ class NotifyGoalBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
         val totalSteps = p0!!.values[0].toInt()
         val dailyZero = sharedPreferences.getInt(dailyZeroStepsKey, 0)
         val isGoalAlreadyReached = sharedPreferences.getBoolean(dailyGoalReachedKey, false)
-        val dailyGoal = sharedPreferences.getString(dailyStepsGoalKey, "1000")
+        val dailyGoal = sharedPreferences.getString(dailyStepsGoalKey, DAILY_STEPS_GOAL_DEFAULT)
 
-        if(!isGoalAlreadyReached && totalSteps + previousTotalSteps - dailyZero > dailyGoal.toInt()) {
+        if (!isGoalAlreadyReached && totalSteps + previousTotalSteps - dailyZero > dailyGoal.toInt()) {
             val ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val notificationManager = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -78,7 +79,7 @@ class NotifyGoalBroadcastReceiver : BroadcastReceiver(), SensorEventListener {
             sharedPreferences.edit().putBoolean(dailyGoalReachedKey, true).apply()
         }
 
-        sensorManager?.unregisterListener(this)
+        sensorManager.unregisterListener(this)
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
