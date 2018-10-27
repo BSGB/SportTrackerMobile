@@ -3,14 +3,14 @@
 
     <!--sign-in/sign-up activity-->
     <string name="user_email">enter your email…</string>
-    <string name="user_username">enter your username…</string>
     <string name="user_password">enter your password…</string>
-    <string name="sign">or %1$s</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="switch_to_register">Not a member? Register now.</string>
+    <string name="switch_to_login">Already registered? Login now.</string>
 
     <!--home activity-->
-    <string name="welcome">Hello, %1$s!</string>
+    <string name="dashboard">Dashboard</string>
     <string name="steps">Steps</string>
     <string name="calories">%1$s kcal</string>
     <string name="bicycle_trip">Bicycle Trip</string>

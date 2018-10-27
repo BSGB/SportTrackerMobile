@@ -13,13 +13,12 @@ import android.os.IBinder
 import android.preference.PreferenceManager
 import android.provider.Settings
 
-private const val INTENT_EXTRA_LOCATIONS = "locations"
-
 class LocationTrackerService : Service() {
 
     companion object {
         const val MIN_DISTANCE = 0F
         const val INTENT_ACTION = "location_update"
+        const val INTENT_EXTRA_LOCATIONS = "locations"
         val locations = ArrayList<Location>()
         var minTime = 0L
     }

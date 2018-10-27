@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "226975614226",
+    "firebase_url": "https://rare-sound-218508.firebaseio.com",
+    "project_id": "rare-sound-218508",
+    "storage_bucket": "rare-sound-218508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226975614226:android:216e5f0c8455370e",
+        "android_client_info": {
+          "package_name": "com.puntl.sporttracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226975614226-mc1786q3oldg81833vq6oaeii549lbb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQgFtwnwm--mrNcMiwPJNBkz-0ZfiE7NU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

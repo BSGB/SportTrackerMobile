@@ -3,46 +3,47 @@ package com.puntl.sporttracker
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
-import com.parse.ParseAnalytics
-import com.parse.ParseUser
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-
-private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
-    enum class SignStatus(val status: Boolean) {
-        SIGN_IN(true),
-        SIGN_UP(false)
+    enum class SignStatus {
+        LOGIN,
+        REGISTER
     }
 
-    private var signStatus = SignStatus.SIGN_IN.status
+    private lateinit var firebaseAuth: FirebaseAuth
+    private var signStatus = SignStatus.LOGIN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ParseAnalytics.trackAppOpenedInBackground(intent)
-
-        //check if user is already signed in - if so, proceed to Home activity
-        if (ParseUser.getCurrentUser() != null) {
-            val homeIntent = Intent(applicationContext, HomeActivity::class.java)
-            startActivity(homeIntent)
-        }
 
         //hide action bar
         supportActionBar?.hide()
 
-        //set sign mode
-        switchSignMode()
+        firebaseAuth = FirebaseAuth.getInstance()
 
-        //sign method switcher listener
-        signTextView.setOnClickListener {
-            signStatus = !signStatus
-            switchSignMode()
+        if (firebaseAuth.currentUser != null) {
+            val homeIntent = Intent(applicationContext, HomeActivity::class.java)
+            startActivity(homeIntent)
+        }
+
+        switchSignEditText.setOnClickListener {
+            signStatus = when (signStatus) {
+                SignStatus.LOGIN -> {
+                    SignStatus.REGISTER
+                }
+
+                SignStatus.REGISTER -> {
+                    SignStatus.LOGIN
+                }
+            }
+            updateUI()
         }
 
         //virtual keyboard enter listener
@@ -59,91 +60,60 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSignClick(view: View) {
-//        Log.d(TAG, "Sign button clicked")
-//        if (isInputCorrect()) {
-//            Log.d(TAG, "User input is correct")
-//            when (signStatus) {
-//                SignStatus.SIGN_IN.status -> signUserIn()
-//                SignStatus.SIGN_UP.status -> signUserUp()
-//            }
-//        } else {
-//            Log.e(TAG, "User input incorrect")
-//            Toast.makeText(this, "All fields have to be filled.", Toast.LENGTH_SHORT).show()
-//        }
-        startActivity(Intent(applicationContext, HomeActivity::class.java))
-    }
+        val userEmail = emailEditText.text.toString().trim()
+        val userPassword = passwordEditText.text.toString().trim()
 
-    private fun switchSignMode() {
-        emailEditText.text.clear()
-        usernameEditText.text.clear()
-        passwordEditText.text.clear()
-
-        when (signStatus) {
-            SignStatus.SIGN_IN.status -> {
-                emailEditText.visibility = View.INVISIBLE
-                signButton.text = getString(R.string.sign_in)
-                signTextView.text = getString(R.string.sign, getString(R.string.sign_up))
-            }
-            SignStatus.SIGN_UP.status -> {
-                emailEditText.visibility = View.VISIBLE
-                signButton.text = getString(R.string.sign_up)
-                signTextView.text = getString(R.string.sign, getString(R.string.sign_in))
+        if (isInputCorrect(userEmail, userPassword)) {
+            when (signStatus) {
+                SignStatus.LOGIN -> loginUser(userEmail, userPassword)
+                SignStatus.REGISTER -> registerUser(userEmail, userPassword)
             }
         }
     }
 
-    private fun isInputCorrect(): Boolean {
-        return when (signStatus) {
-            SignStatus.SIGN_IN.status -> {
-                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
-            }
-            SignStatus.SIGN_UP.status -> {
-                usernameEditText.text.isNotEmpty() && usernameEditText.text.isNotBlank()
-                        && passwordEditText.text.isNotEmpty() && passwordEditText.text.isNotBlank()
-                        && emailEditText.text.isNotEmpty() && emailEditText.text.isNotBlank()
-            }
-            else -> false
-        }
+    private fun isInputCorrect(userEmail: String, userPassword: String): Boolean {
+        return if (userEmail.isNullOrBlank() || userEmail.isNullOrEmpty()
+                || userPassword.isNullOrBlank() || userPassword.isNullOrEmpty()) {
+            Toast.makeText(this, "Both email and password have to be filled.", Toast.LENGTH_LONG).show()
+            false
+        } else true
     }
 
-    private fun signUserUp() {
-        Log.d(TAG, "Starting sign up process")
-        val email = emailEditText.text.toString()
-        val username = usernameEditText.text.toString()
-        val password = passwordEditText.text.toString()
-
-        val parseUser = ParseUser()
-        parseUser.username = username
-        parseUser.email = email
-        parseUser.setPassword(password)
-
-        parseUser.signUpInBackground { exception ->
-            if (exception == null) {
-                Log.d(TAG, "User signed up successfully")
-                Toast.makeText(this, "Account created successfully.", Toast.LENGTH_SHORT).show()
-                signStatus = !signStatus
-                switchSignMode()
-            } else {
-                Log.e(TAG, "Error while creating user")
-                Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun registerUser(userEmail: String, userPassword: String) {
+        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(this, "User registered successfully.", Toast.LENGTH_LONG).show()
+                        signStatus = SignStatus.LOGIN
+                        updateUI()
+                    } else {
+                        Toast.makeText(this, it.exception?.message, Toast.LENGTH_LONG).show()
+                    }
+                }
     }
 
-    private fun signUserIn() {
-        Log.d(TAG, "Starting sign in process")
-        val username = usernameEditText.text.toString()
-        val password = passwordEditText.text.toString()
+    private fun loginUser(userEmail: String, userPassword: String) {
+        firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val homeIntent = Intent(applicationContext, HomeActivity::class.java)
+                        startActivity(homeIntent)
+                    } else {
+                        Toast.makeText(this, it.exception?.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+    }
 
-        ParseUser.logInInBackground(username, password) { user, exception ->
-            if (user != null) {
-                Log.d(TAG, "User signed in successfully, switching intent")
-                val homeIntent = Intent(applicationContext, HomeActivity::class.java)
-                startActivity(homeIntent)
-            } else {
-                Log.e(TAG, "Error while signing in user")
-                Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+    private fun updateUI() {
+        switchSignEditText.text = when (signStatus) {
+            SignStatus.LOGIN -> {
+                signButton.text = getString(R.string.login)
+                getString(R.string.switch_to_register)
+            }
+
+            SignStatus.REGISTER -> {
+                signButton.text = getString(R.string.register)
+                getString(R.string.switch_to_login)
             }
         }
     }

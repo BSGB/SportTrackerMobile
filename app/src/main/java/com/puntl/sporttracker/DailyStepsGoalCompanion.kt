@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 
-private const val MINUTES = 60L
+private const val MINUTES = 30L
 private const val SECONDS = 60L
 private const val MILLISECONDS = 1000L
 

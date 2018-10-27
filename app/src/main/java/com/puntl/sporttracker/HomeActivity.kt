@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.parse.ParseUser
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_home.*
 
 private const val CALORIES_PER_STEP = 0.04F
@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dailyTotalStepsKey: String
     private lateinit var dailyZeroStepsKey: String
 
@@ -41,7 +42,7 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.signOutMenuItem -> {
-                ParseUser.logOut()
+                firebaseAuth.signOut()
                 val mainIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(mainIntent)
                 true
@@ -59,15 +60,16 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        firebaseAuth = FirebaseAuth.getInstance()
+
         /*user clicks on daily steps goal notification - it is necessary to check if user is
         signed in and if isn't -> send back to MainActivity*/
-//        if(ParseUser.getCurrentUser() == null) {
-//            val mainIntent = Intent(applicationContext, MainActivity::class.java)
-//            startActivity(mainIntent)
-//        }
+        if (firebaseAuth.currentUser == null) {
+            val mainIntent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(mainIntent)
+        }
 
-        //greeting action bar
-//        supportActionBar?.title = getString(R.string.welcome, ParseUser.getCurrentUser().username)
+        supportActionBar?.title = getString(R.string.dashboard)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)

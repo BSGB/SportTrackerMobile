@@ -55,6 +55,6 @@
 
         <com.puntl.sporttracker.SeekBarPreference
             android:key="@string/run_tracker_time_key"
-            android:title="@string/run_tracker_time"/>
+            android:title="@string/run_tracker_time" />
     </PreferenceCategory>
 </PreferenceScreen>
